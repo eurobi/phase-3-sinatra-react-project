@@ -1,9 +1,8 @@
 class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
   
-  # Add your routes here
   get "/" do
-    { message: "Good luck with your project!" }.to_json
+    { message: "try /users, /comments, or /posts" }.to_json
   end
 
   #USERS
@@ -12,16 +11,104 @@ class ApplicationController < Sinatra::Base
     users.to_json
   end
 
+  get "/users/:id" do
+    user = User.find(params[:id])
+    user.to_json
+  end
+
+  post "/users" do
+    user = User.create(
+      first_name: params[:first_name],
+      last_name: params[:last_name],
+      user_name: params[:user_name],
+      password: params[:password],
+      profile_img: params[:profile_img]
+    )
+    user.to_json
+  end
+
+  patch "/users/:id" do
+    user = User.find(params[:id])
+    user.update(
+      first_name: params[:first_name],
+      last_name: params[:last_name],
+      user_name: params[:user_name],
+      password: params[:password],
+      profile_img: params[:profile_img]
+    )
+    user.to_json
+  end
+
+  delete "/users/:id" do
+    user = User.find(params[:id])
+    user.destroy
+    user.to_json
+  end
+
+
   #POSTS
   get "/posts" do
     posts = Post.all
     posts.to_json
   end
 
+  get "/posts/:id" do
+    post = Post.find(params[:id])
+    post.to_json
+  end
+
+  post "/posts" do
+    post = Post.create(
+      content: params[:content],
+      user_id: params[:user_id]
+    )
+    post.to_json
+  end
+
+  patch "/posts/:id" do
+    post = Post.find(params[:id])
+    post.update(
+      content: params[:content],
+      user_id: params[:user_id]
+    )
+    post.to_json
+  end
+
+  delete "/posts/:id" do
+    post = Post.find(params[:id])
+    post.destroy
+    post.to_json 
+  end
+
   #COMMENTS
   get "/comments" do
     comments = Comment.all
     comments.to_json
+  end
+
+  post "/comments" do
+    comment = Comment.create(
+      content: params[:content],
+      user_id: params[:user_id],
+      post_id: params[:post_id]
+    )
+    comment.to_json
+  end
+
+  patch "/comments/:id" do
+    comment = Comment.find(params[:id])
+    comment.update(
+      content: params[:content],
+      user_id: params[:user_id],
+      post_id: params[:post_id]
+    )
+    comment.to_json
+  end
+
+  delete "/comments/:id" do
+    comment = Comment.find(params[:id])
+    comment.destroy
+    comment.to_json
   end
 
 end
