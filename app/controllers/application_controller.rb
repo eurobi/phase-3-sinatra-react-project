@@ -16,6 +16,18 @@ class ApplicationController < Sinatra::Base
     user.to_json
   end
 
+  get "/usernames" do
+    users = User.all.map do |user|
+      user.user_name
+    end
+    users.to_json
+  end
+
+  get "/search-users/:name" do
+    user = User.find_by(user_name: params[:name])
+    user.to_json
+  end
+
   post "/users" do
     user = User.create(
       first_name: params[:first_name],
@@ -49,7 +61,7 @@ class ApplicationController < Sinatra::Base
   #POSTS
   get "/posts" do
     posts = Post.all
-    posts.to_json
+    posts.to_json(include: [:user, { comments: { include: :user } }])
   end
 
   get "/posts/:id" do
