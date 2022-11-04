@@ -74,7 +74,7 @@ class ApplicationController < Sinatra::Base
       content: params[:content],
       user_id: params[:user_id]
     )
-    post.to_json
+    post.to_json(include: [:user, { comments: { include: :user } }])
   end
 
   patch "/posts/:id" do
