@@ -60,13 +60,13 @@ class ApplicationController < Sinatra::Base
 
   #POSTS
   get "/posts" do
-    posts = Post.all
+    posts = Post.all.order(created_at: :desc)
     posts.to_json(include: [:user, { comments: { include: :user } }])
   end
 
   get "/posts/:id" do
     post = Post.find(params[:id])
-    post.to_json
+    post.to_json(include: [:user, { comments: { include: :user } }])
   end
 
   post "/posts" do
@@ -81,9 +81,11 @@ class ApplicationController < Sinatra::Base
     post = Post.find(params[:id])
     post.update(
       content: params[:content],
-      user_id: params[:user_id]
+      id: post[:id],
+      user_id: post[:user_id]
+
     )
-    post.to_json
+    post.to_json(include: [:user, { comments: { include: :user } }])
   end
 
   delete "/posts/:id" do
