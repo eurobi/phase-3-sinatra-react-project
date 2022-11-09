@@ -97,7 +97,7 @@ class ApplicationController < Sinatra::Base
   #COMMENTS
   get "/comments" do
     comments = Comment.all
-    comments.to_json
+    comments.to_json(include: :user)
   end
 
   post "/comments" do
@@ -106,7 +106,7 @@ class ApplicationController < Sinatra::Base
       user_id: params[:user_id],
       post_id: params[:post_id]
     )
-    comment.to_json
+    comment.to_json(include: :user)
   end
 
   patch "/comments/:id" do
@@ -122,7 +122,7 @@ class ApplicationController < Sinatra::Base
   delete "/comments/:id" do
     comment = Comment.find(params[:id])
     comment.destroy
-    comment.to_json
+    comment.to_json(include: :post)
   end
 
 end
